@@ -67,7 +67,7 @@ router.get('/author/:id/posts', (req, res) => {
         /**
          * Get posts made by the author
          */
-        const authorPosts = GetPostsMadeByAuthor(profile.id);
+        const authorPosts = GetPostsByAuthor(profile.id);
 
         res.status(200)
             .json({
@@ -97,6 +97,28 @@ const GetPostsMadeByAuthor = (authorId) => {
             authorPosts.push(allPosts[i]);
         }
     }
+
+    return authorPosts;
+}
+
+const GetPostsByAuthor = (authorId) => {
+    /**
+     * Get all posts in database
+     */
+    const allPosts = PostDetails.list();
+
+    const authorPosts = allPosts.filter((post) => {
+        /**
+         * Filter posts based on author id
+         * If post's author is same as the author given by the the `authorId`, add this to list
+         */
+        if(post.authorID === authorId){
+            return true;
+        }
+        else{
+            return false;
+        }
+    })
 
     return authorPosts;
 }
