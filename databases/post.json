@@ -1,15 +1,15 @@
 [
   {
     "id": "SJoPVdMmP",
-    "post": "1st book",
-    "story": "how i met my love",
+    "genre": "romance",
+    "title": "how i met my love",
     "authorID": "H1-qRSzQw"
   },
   
   {
     "id": "SJoPVdMmP",
-    "post": "1st book",
-    "story": "The way how i managed to bang myself",
+    "genre": "ghapaghap",
+    "title": "The frist time i bang myself",
     "authorID": "rysSxKMmw"
   }
 ]
