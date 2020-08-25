@@ -50,53 +50,56 @@ router.post('/authordetails', (req,res)=>{
     })
     } 
 })
-router.get('/author/:id/post',(req,res)=>{
-    let profile = null;
-    const id = req.params.id;
-    profile = AuthorDetails.get(id);
 
-    const post = PostDetails.list();
-    console.log(post.length);
-
-    const Get = (id) => {
-        let user = null;
-
-    
-       
-        for(let i = 0; i < post.length; i++ ){
-            
-            if(id === post[i].authorID)
-            {
-                user = post[i];
-                break;
-            }
-        }
-    
-        return user;
+/**
+ * Get all posts made by an author
+ */
+router.get('/author/:id/posts', (req, res) => {
+    const profile = AuthorDetails.get(req.params.id);
+    if (!profile /* profile is null */) {
+        res.status(404)
+            .json({
+                status: 'Not Found',
+                message: 'Author not found'
+            })
     }
-    const Prof = Get(id);
-    console.log(Prof);
-    if(Prof!=null){
-        res.status(200).json({
-            status:'OK',
-            message:'Author Authenticated',
-            data:{
-                Prof
-            }
-        })
+    else {
+        /**
+         * Get posts made by the author
+         */
+        const authorPosts = GetPostsMadeByAuthor(profile.id);
 
+        res.status(200)
+            .json({
+                status: 'OK',
+                message: 'Author Posts',
+                data: authorPosts
+            })
     }
-    else{
-        res.status(404).json({
-            status:'Not Found',
-            message:'Author Authentication Failed',
-           
-        })
-
-    }
-    
-    
 })
+
+const GetPostsMadeByAuthor = (authorId) => {
+    /**
+     * Get all posts in database
+     */
+    const allPosts = PostDetails.list();
+    
+    /**
+     * An empty array to hold posts made by the author
+     */
+    const authorPosts = [];
+
+    for (let i = 0; i < allPosts.length; i++) {
+        if (authorId === allPosts[i].authorID) {
+            /**
+             * Post matches author. Add it to list
+             */
+            authorPosts.push(allPosts[i]);
+        }
+    }
+
+    return authorPosts;
+}
 
 
 module.exports = router;
