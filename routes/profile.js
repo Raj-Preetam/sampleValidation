@@ -30,7 +30,7 @@ router.post('/authordetails', (req,res)=>{
     const autID = req.body.authorID;
     const profile = AuthorDetails.get(autID); /** gets the particular author from author.json */
     /** if statement shows undefined if wrong author id is given */
-    if(autID!=profile.id){
+    if(profile==null){
         res.status(404).json({
             "status": "not found",
             "message": "Please register author first"
@@ -43,29 +43,31 @@ router.post('/authordetails', (req,res)=>{
         const id = PostDetails.create(autProfile);
         res.status(200).json({
         status:'OK',
-        message:'Author Profile Created',
+        message:'Post Created',
         data:{
             id
         }
     })
     } 
 })
-router.get('/authordetails/:id',(req,res)=>{
+router.get('/author/:id/post',(req,res)=>{
     let profile = null;
     const id = req.params.id;
     profile = AuthorDetails.get(id);
 
-    console.log(PostDetails.length) /** getting undefined */
-    
+    const post = PostDetails.list();
+    console.log(post.length);
+
     const Get = (id) => {
         let user = null;
+
     
        
-        for(let i = 0; i < PostDetails.length; i++ ){
+        for(let i = 0; i < post.length; i++ ){
             
-            if(id === PostDetails[i].authorID)
+            if(id === post[i].authorID)
             {
-                user = PostDetails[i];
+                user = post[i];
                 break;
             }
         }
@@ -73,7 +75,26 @@ router.get('/authordetails/:id',(req,res)=>{
         return user;
     }
     const Prof = Get(id);
-   
+    console.log(Prof);
+    if(Prof!=null){
+        res.status(200).json({
+            status:'OK',
+            message:'Author Authenticated',
+            data:{
+                Prof
+            }
+        })
+
+    }
+    else{
+        res.status(404).json({
+            status:'Not Found',
+            message:'Author Authentication Failed',
+           
+        })
+
+    }
+    
     
 })
 
